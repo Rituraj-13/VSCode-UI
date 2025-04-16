@@ -2,11 +2,13 @@
   "version": 1,
   "include": ["/*"],
   "exclude": [
+    "/_assets/*",
     "/build/*",
     "/static/*",
     "/*.ico",
     "/*.png",
-    "/*.svg"
+    "/*.svg",
+    "/vs/*"
   ],
   "routes": [
     {
