@@ -1,34 +1,40 @@
-import React, { useEffect, useRef } from 'react';
-import MonacoEditor from 'react-monaco-editor';
 import { useEditorContext } from '../../context/EditorContext';
+import { Editor as MonacoEditorComponent } from '@monaco-editor/react';
+import type { OnMount } from '@monaco-editor/react';
 
-const Editor = () => {
-    const editorRef = useRef(null);
-    const { currentFile, updateFile, setCursorPosition } = useEditorContext();
+export default function MonacoEditor() {
+  const { currentFile, updateFileContent } = useEditorContext();
 
-    useEffect(() => {
-        if (editorRef.current) {
-            const editor = editorRef.current.editor;
+  const handleEditorDidMount: OnMount = (_editor, _monaco) => {
+    // Editor instance available for future use
+    console.log('Editor mounted');
+  };
 
-            editor.onDidChangeCursorPosition((e) => {
-                const position = e.position;
-                setCursorPosition({
-                    line: position.lineNumber,
-                    column: position.column
-                });
-            });
-        }
-    }, [editorRef, setCursorPosition]);
+  const handleChange = (value: string | undefined) => {
+    if (currentFile && value !== undefined) {
+      updateFileContent(currentFile.id, value);
+    }
+  };
 
-    return (
-        <MonacoEditor
-            ref={editorRef}
-            language="javascript"
-            theme="vs-dark"
-            value={currentFile.content}
-            onChange={(newValue) => updateFile(currentFile.id, newValue)}
+  return (
+    <div className="h-full w-full">
+      {currentFile && (
+        <MonacoEditorComponent
+          height="100%"
+          defaultLanguage={currentFile.language}
+          value={currentFile.content}
+          theme="vs-dark"
+          onChange={handleChange}
+          onMount={handleEditorDidMount}
+          options={{
+            minimap: { enabled: true },
+            fontSize: 14,
+            lineNumbers: 'on',
+            readOnly: false,
+            automaticLayout: true,
+          }}
         />
-    );
-};
-
-export default Editor;
+      )}
+    </div>
+  );
+}

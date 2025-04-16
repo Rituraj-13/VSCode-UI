@@ -1,7 +1,17 @@
-import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
 import { getFileLanguage } from "@/lib/fileTypes";
 import type { editor as monacoEditor } from 'monaco-editor';
 import { projectStructure as initialProjectStructure } from '@/components/Editor/Sidebar';
+
+interface TreeItem {
+  id?: number;
+  name: string;
+  isFolder?: boolean;
+  children?: TreeItem[];
+  content?: string;
+  path?: string;
+  language?: string;
+}
 
 // Define File type directly in the frontend to avoid backend dependency
 export interface File {
@@ -412,6 +422,22 @@ export const EditorProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       {children}
     </EditorContext.Provider>
   );
+};
+
+export const processTreeItem = (item: TreeItem, parentPath: string[] = []): TreeItem => {
+  const currentPath = [...parentPath, item.name];
+  
+  if (item.isFolder && item.children) {
+    return {
+      ...item,
+      children: item.children.map(child => processTreeItem(child, currentPath))
+    };
+  }
+  
+  return {
+    ...item,
+    path: currentPath.join('/')
+  };
 };
 
 export const useEditorContext = () => {

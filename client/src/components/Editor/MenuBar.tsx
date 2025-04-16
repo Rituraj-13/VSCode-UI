@@ -1,9 +1,9 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useEditorContext } from '@/context/EditorContext';
-import type { CreateNewItemFn } from './Sidebar';
 import { CommandDialog, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
 import { getFileIcon, getFileLanguage } from "@/lib/fileTypes";
 import { downloadFile } from '@/lib/fileUtils';
+import type { File } from '@/context/EditorContext';
 
 // Add type for tree items
 type TreeItem = {
@@ -13,21 +13,20 @@ type TreeItem = {
   content?: string;
 };
 
+interface MenuBarProps {
+  onCreateNewItem?: (type: 'file' | 'folder') => void;
+}
+
+type MenuItemType = {
+  label?: string;
+  type?: 'separator';
+  shortcut?: string;
+  action?: () => void;
+};
+
 // Helper function to flatten tree into file list
-const getFilesFromTree = (items: TreeItem[], parentPath: string[] = []): Array<{
-  id: number;
-  name: string;
-  path: string;
-  content: string;
-  language: string;
-}> => {
-  let files: Array<{
-    id: number;
-    name: string;
-    path: string;
-    content: string;
-    language: string;
-  }> = [];
+const getFilesFromTree = (items: TreeItem[], parentPath: string[] = []): File[] => {
+  let files: File[] = [];
 
   items.forEach(item => {
     const currentPath = [...parentPath, item.name];
@@ -38,7 +37,8 @@ const getFilesFromTree = (items: TreeItem[], parentPath: string[] = []): Array<{
         name: item.name,
         path: parentPath.join('/'),
         content: item.content,
-        language: getFileLanguage(item.name)
+        language: getFileLanguage(item.name),
+        lastModified: new Date().toISOString()
       });
     } else if (item.children) {
       files = [...files, ...getFilesFromTree(item.children, currentPath)];
@@ -48,14 +48,9 @@ const getFilesFromTree = (items: TreeItem[], parentPath: string[] = []): Array<{
   return files;
 };
 
-interface MenuBarProps {
-  onCreateNewItem?: (type: 'file' | 'folder') => void;
-}
-
 export default function MenuBar({ onCreateNewItem }: MenuBarProps) {
   const [activeMenu, setActiveMenu] = React.useState<string | null>(null);
   const [showCommandPalette, setShowCommandPalette] = React.useState(false);
-  // Add toggleTerminal to destructured props
   const { editor, openFile, setActiveTab, files, projectStructure, currentFile, saveFile, toggleTerminal } = useEditorContext();
   const [isTerminalVisible, setIsTerminalVisible] = useState(false);
 
@@ -67,7 +62,6 @@ export default function MenuBar({ onCreateNewItem }: MenuBarProps) {
 
   const handleSaveAs = async () => {
     if (currentFile) {
-      // Save the current content state, not any unsaved changes
       await downloadFile(currentFile.name, currentFile.content);
     }
   };
@@ -100,7 +94,7 @@ export default function MenuBar({ onCreateNewItem }: MenuBarProps) {
         setShowCommandPalette(true);
         break;
       case 'explorer':
-        setActiveTab("explorer"); // This will now work
+        setActiveTab("explorer");
         break;
       case 'search':
         setActiveTab("search");
@@ -112,20 +106,17 @@ export default function MenuBar({ onCreateNewItem }: MenuBarProps) {
         toggleTerminal();
         break;
     }
-    // Close the menu after selection
     setActiveMenu(null);
   };
 
-  const menus = {
+  const menus: Record<string, MenuItemType[]> = {
     File: [
       {
         label: 'New File',
-        // shortcut: 'Ctrl+N',
         action: () => onCreateNewItem?.('file')
       },
       {
         label: 'New Folder',
-        // shortcut: 'Ctrl+Shift+N',
         action: () => onCreateNewItem?.('folder')
       },
       { type: 'separator' },
@@ -138,9 +129,7 @@ export default function MenuBar({ onCreateNewItem }: MenuBarProps) {
         label: 'Save As...',
         shortcut: 'Ctrl+Shift+S',
         action: handleSaveAs
-      },
-      { type: 'separator' },
-      // { label: 'Exit', shortcut: 'Alt+F4' }
+      }
     ],
     Edit: [
       {
@@ -202,10 +191,8 @@ export default function MenuBar({ onCreateNewItem }: MenuBarProps) {
     ]
   };
 
-  // Get flattened files from tree
   const treeFiles = getFilesFromTree(projectStructure);
 
-  // Add keyboard shortcut listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') {
@@ -225,7 +212,7 @@ export default function MenuBar({ onCreateNewItem }: MenuBarProps) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentFile, toggleTerminal]); // Add toggleTerminal to dependencies
+  }, [currentFile, toggleTerminal]);
 
   return (
     <>
@@ -270,7 +257,6 @@ export default function MenuBar({ onCreateNewItem }: MenuBarProps) {
       <CommandDialog
         open={showCommandPalette}
         onOpenChange={setShowCommandPalette}
-        className="editor-command-palette"
       >
         <CommandInput
           placeholder="Type to search files..."
@@ -289,7 +275,7 @@ export default function MenuBar({ onCreateNewItem }: MenuBarProps) {
               return (
                 <CommandItem
                   key={file.id}
-                  value={file.name} // Search by file name
+                  value={file.name}
                   onSelect={handleSelection}
                   className="flex items-center gap-2"
                 >
