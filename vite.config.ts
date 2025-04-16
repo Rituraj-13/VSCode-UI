@@ -35,7 +35,7 @@ export default defineConfig({
     target: "esnext",
     sourcemap: !isProduction,
     rollupOptions: {
-      input: 'src/main.tsx',
+      input: 'client/src/main.tsx',
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom'],
