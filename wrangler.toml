@@ -2,16 +2,10 @@ name = "vscode-ui"
 compatibility_date = "2025-04-16"
 
 [build]
-command = "npm run pages:deploy"
+command = "npm run build"  # or your exact build command
 
 [site]
-bucket = "./dist"
-
-[build.upload]
-format = "service-worker"
+bucket = "./workers-site"
 
 [assets]
-directory = "./dist"
-
-[main]
-main = "workers-site/index.js"
+directory = "./workers-site"
