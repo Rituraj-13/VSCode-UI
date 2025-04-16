@@ -41,7 +41,7 @@ const extensions = [
     name: "Auto Rename Tag",
     author: "Jun Han",
     description: "Auto rename paired HTML/XML tag",
-    installs: 10.4,
+    installs: 10400000, // Changed from string to number
     version: 2.0,
     rating: 4.0,
     loadTime: "68ms",
@@ -376,7 +376,7 @@ const getFilteredExtensionsByType = (filter: string) => {
     category: "filtered",
     version: null,
     description: ext.description || `A powerful extension for ${filter}`,
-    isInstalled: ext.isInstalled ?? false
+    isInstalled: false
   }));
 };
 
@@ -394,7 +394,7 @@ interface NewItem {
 }
 
 export default function Sidebar({ activeTab, onCreateNewItem }: SidebarProps) {
-  const { openFile, toggleTheme, theme, setFiles, files, currentFile } = useEditorContext();
+  const { openFile, toggleTheme, theme,  files, currentFile } = useEditorContext();
   const [localExtensions, setLocalExtensions] = useState(extensions);
   const [filteredExtensions, setFilteredExtensions] = useState(extensions);
   const [selectedSettingsTab, setSelectedSettingsTab] = useState("Editor");

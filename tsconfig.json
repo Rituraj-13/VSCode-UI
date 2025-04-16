@@ -19,6 +19,7 @@
     "jsx": "react-jsx",
     "types": ["node", "vite/client"],
     "baseUrl": ".",
+    "downlevelIteration": true,
     "paths": {
       "@/*": ["client/src/*"],
       "@shared/*": ["shared/*"],

@@ -127,7 +127,7 @@ interface EditorContextType {
   currentFile: File | null;
   theme: "vs-dark" | "vs-light";
   searchVisible: boolean;
-  openFile: (file: File) => void;
+  openFile: (file: File, forceUpdate?: boolean) => void;
   closeFile: (fileId: number) => void;
   setCurrentFile: (file: File) => void;
   updateFileContent: (fileId: number, content: string) => void;
