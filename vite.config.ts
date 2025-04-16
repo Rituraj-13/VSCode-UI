@@ -6,7 +6,11 @@ import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      babel: {
+        plugins: process.env.NODE_ENV === 'production' ? [] : ['@babel/plugin-transform-typescript']
+      }
+    }),
     runtimeErrorOverlay(),
     themePlugin(),
   ],
@@ -35,5 +39,10 @@ export default defineConfig({
   server: {
     port: 3000,
     strictPort: true
+  },
+  esbuild: {
+    logOverride: { 'this-is-undefined-in-esm': 'silent' },
+    tsconfigRaw: process.env.NODE_ENV === 'production' ? 
+      { compilerOptions: { noUnusedLocals: false, noUnusedParameters: false } } : undefined
   }
 });

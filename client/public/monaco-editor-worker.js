@@ -3,8 +3,8 @@
  * This provides a fallback implementation for Monaco Editor's workers
  */
 self.MonacoEnvironment = {
-  baseUrl: 'https://unpkg.com/monaco-editor@0.37.1/min/'
+  baseUrl: '/vs'
 };
 
-// Import the real editor worker from CDN with a specific version for stability
-importScripts('https://unpkg.com/monaco-editor@0.37.1/min/vs/base/worker/workerMain.js');
+// Use local worker files instead of CDN for better reliability
+importScripts('/vs/base/worker/workerMain.js');
