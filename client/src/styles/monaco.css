@@ -1,0 +1,100 @@
+/* Monaco Editor Custom Styles */
+
+/* Make the editor take up the full space */
+.monaco-editor {
+  width: 100%;
+  height: 100%;
+}
+
+/* Customize scrollbars */
+.monaco-editor .monaco-scrollable-element > .scrollbar > .slider {
+  background: rgba(128, 128, 128, 0.4);
+}
+
+.monaco-editor .monaco-scrollable-element > .scrollbar > .slider:hover {
+  background: rgba(128, 128, 128, 0.6);
+}
+
+/* Customize cursor */
+.monaco-editor .cursor {
+  width: 2px !important;
+}
+
+/* Customize minimap */
+.monaco-editor .minimap {
+  opacity: 0.8;
+}
+
+/* Active line highlight */
+.monaco-editor .current-line {
+  border: none !important;
+}
+
+.dark-theme .monaco-editor .current-line {
+  background: #2A2D2E !important;
+}
+
+.light-theme .monaco-editor .current-line {
+  background: #F5F5F5 !important;
+}
+
+/* Editor container and focus styles */
+.editor-container:focus {
+  outline: none;
+}
+
+/* Custom VS Code-like scrollbars for the entire app */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.4);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.6);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Dark theme scrollbars */
+.dark-theme ::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.4);
+}
+
+.dark-theme ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(128, 128, 128, 0.7);
+}
+
+/* Light theme scrollbars */
+.light-theme ::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.3);
+}
+
+.light-theme ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(128, 128, 128, 0.5);
+}
+
+/* Editor colors - inherited from Tailwind config */
+:root {
+  --editor-dark: #1E1E1E;
+  --editor-light: #FFFFFF;
+  --editor-sidebar-dark: #252526;
+  --editor-sidebar-light: #F3F3F3;
+  --editor-statusbar-dark: #007ACC;
+  --editor-statusbar-light: #007ACC;
+  --editor-accent: #007ACC;
+  --editor-selection-dark: #264F78;
+  --editor-selection-light: #ADD6FF;
+  --editor-line-highlight-dark: #2A2D2E;
+  --editor-line-highlight-light: #F5F5F5;
+}
