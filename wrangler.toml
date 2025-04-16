@@ -2,17 +2,13 @@ name = "vscode-ui"
 compatibility_date = "2025-04-16"
 
 [build]
-command = "NODE_ENV=production CI=false npm run pages:deploy"
-watch_dir = "client/src"
-
-[build.upload]
-format = "service-worker"
+command = "npm run pages:deploy"
 
 [site]
 bucket = "./dist"
 
-[env.production]
-vars = { NODE_ENV = "production", TYPESCRIPT_CONFIG = "tsconfig.prod.json" }
+[build.upload]
+format = "service-worker"
 
 [assets]
 directory = "./dist"
