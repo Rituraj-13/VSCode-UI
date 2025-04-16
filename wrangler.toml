@@ -13,4 +13,5 @@ format = "service-worker"
 [assets]
 directory = "./dist"
 
+[main]
 main = "workers-site/index.js"
