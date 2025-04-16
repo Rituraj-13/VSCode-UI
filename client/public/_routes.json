@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": [
+    "/build/*",
+    "/static/*",
+    "/*.ico",
+    "/*.png",
+    "/*.svg"
+  ],
+  "routes": [
+    {
+      "src": "^/vs/.*",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "src": "^/assets/.*",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "src": ".*",
+      "dest": "/index.html"
+    }
+  ]
+}
