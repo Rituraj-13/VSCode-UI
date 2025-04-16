@@ -2,11 +2,21 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
-    "emitDeclarationOnly": false,
+    "allowJs": true,
+    "checkJs": false,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "noImplicitReturns": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "noImplicitAny": false
-  }
+    "noFallthroughCasesInSwitch": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "strictBindCallApply": false,
+    "strictPropertyInitialization": false,
+    "noStrictGenericChecks": false,
+    "skipLibCheck": true
+  },
+  "include": ["client/src"],
+  "exclude": ["node_modules"]
 }

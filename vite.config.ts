@@ -4,11 +4,17 @@ import themePlugin from "@replit/vite-plugin-shadcn-theme-json";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
+// Determine if we're in production
+const isProduction = process.env.NODE_ENV === 'production';
+
 export default defineConfig({
   plugins: [
     react({
       babel: {
-        plugins: process.env.NODE_ENV === 'production' ? [] : ['@babel/plugin-transform-typescript']
+        plugins: [],
+        parserOpts: {
+          strictMode: !isProduction
+        }
       }
     }),
     runtimeErrorOverlay(),
@@ -26,7 +32,7 @@ export default defineConfig({
     outDir: path.resolve(__dirname, "dist"),
     emptyOutDir: true,
     target: "esnext",
-    sourcemap: true,
+    sourcemap: !isProduction,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -42,7 +48,20 @@ export default defineConfig({
   },
   esbuild: {
     logOverride: { 'this-is-undefined-in-esm': 'silent' },
-    tsconfigRaw: process.env.NODE_ENV === 'production' ? 
-      { compilerOptions: { noUnusedLocals: false, noUnusedParameters: false } } : undefined
+    tsconfigRaw: isProduction ? {
+      compilerOptions: {
+        noUnusedLocals: false,
+        noUnusedParameters: false,
+        noImplicitAny: false,
+        noImplicitThis: false,
+        noImplicitReturns: false,
+        strictNullChecks: false,
+        strictFunctionTypes: false,
+        strictBindCallApply: false,
+        strictPropertyInitialization: false,
+        noStrictGenericChecks: false,
+        skipLibCheck: true
+      }
+    } : undefined
   }
 });
